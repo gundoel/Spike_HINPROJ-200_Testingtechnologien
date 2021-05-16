@@ -119,6 +119,8 @@ class UserRestControllerIntTest {
               .then()
               .status(HttpStatus.OK)
               .body("$.size()", Matchers.equalTo(1))
-              .body("[0].email", Matchers.equalTo("frieda.mueller@test.com"));
+              .body("[0].email", Matchers.equalTo(testEMail))
+              .body("[0].roles[0].name", Matchers.equalTo("admin"))
+      ;
    }
 }
