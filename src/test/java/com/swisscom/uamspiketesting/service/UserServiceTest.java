@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,7 +31,6 @@ class UserServiceTest {
    @Mock
    private UserRepository userRepository;
    // private AutoCloseable autoCloseable; -> not needed with @ExtendedWith(MockitoExtension.class)
-   @InjectMocks
    private UserService userService;
 
    @BeforeEach
@@ -61,7 +59,7 @@ class UserServiceTest {
    void canAddUser() {
       HashSet<User> usersDummy = new HashSet<>();
       HashSet<Role> roles = new HashSet<>();
-      roles.add(new Role(1,"admin", usersDummy));
+      roles.add(new Role(1, "admin", usersDummy));
       User user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
       userService.addUser(user);
       // verify getUsers was invoked with user we pass
@@ -78,7 +76,7 @@ class UserServiceTest {
    void willThrowWhenUserWithEmailExists() {
       HashSet<User> usersDummy = new HashSet<>();
       HashSet<Role> roles = new HashSet<>();
-      roles.add(new Role(1,"admin", usersDummy));
+      roles.add(new Role(1, "admin", usersDummy));
       User user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
       // mock return value of repository method (which would return false, since user does not exist)
       // instead of email we could pass anyString()
@@ -94,9 +92,8 @@ class UserServiceTest {
    void canGetUsersByEmail() {
       HashSet<User> usersDummy = new HashSet<>();
       HashSet<Role> roles = new HashSet<>();
-      roles.add(new Role(1,"admin", usersDummy));
+      roles.add(new Role(1, "admin", usersDummy));
       User user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
-      //userRepository.save(user);
       List<User> users = new ArrayList<>();
       users.add(user);
       // assert that every user in list has given email address

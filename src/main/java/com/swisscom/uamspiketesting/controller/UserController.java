@@ -2,6 +2,8 @@ package com.swisscom.uamspiketesting.controller;
 
 import com.swisscom.uamspiketesting.service.UserService;
 import com.swisscom.uamspiketesting.model.User;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserController {
 
    @Autowired
