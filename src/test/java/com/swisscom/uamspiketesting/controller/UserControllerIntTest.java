@@ -3,7 +3,7 @@ package com.swisscom.uamspiketesting.controller;
 import com.swisscom.uamspiketesting.model.Role;
 import com.swisscom.uamspiketesting.model.User;
 import com.swisscom.uamspiketesting.service.UserService;
-import org.apache.tomcat.util.file.Matcher;
+import com.swisscom.uamspiketesting.service.UserValidationService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +19,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
 
-import static org.mockito.AdditionalMatchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +31,9 @@ class UserControllerIntTest {
    @MockBean
    // Mock UserService
    UserService userService;
+
+   @MockBean
+   UserValidationService userValidationService;
 
    @Test
    void getUsersTest() throws Exception {
@@ -61,7 +63,7 @@ class UserControllerIntTest {
       resultAction.andExpect(content().string(Matchers.containsString("hans.muster@test.com")));
       resultAction.andExpect(content().string(Matchers.containsString("frieda.mueller@test.com")));
       // check (e. g. alphabetical) sorting
-      resultAction.andExpect(content().string(Matchers.stringContainsInOrder( "frieda.mueller@test.com", "hans.muster@test.com")));
+      resultAction.andExpect(content().string(Matchers.stringContainsInOrder("frieda.mueller@test.com", "hans.muster@test.com")));
       // check users in model
       resultAction.andExpect(model().attribute("users", users));
    }

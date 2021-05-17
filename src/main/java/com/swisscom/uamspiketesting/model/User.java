@@ -1,13 +1,13 @@
 package com.swisscom.uamspiketesting.model;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -19,11 +19,14 @@ public class User {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Integer id;
-   @NotNull
-   @Size(min=2, max=8)
+   @NotBlank
    private String firstName;
+   @NotBlank
    private String lastName;
+   @Email
+   @NotBlank
    private String email;
+   @NotBlank
    private String password;
    private boolean active;
    @ManyToMany(cascade = {

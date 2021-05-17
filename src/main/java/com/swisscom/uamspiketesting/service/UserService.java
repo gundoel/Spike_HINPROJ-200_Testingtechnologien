@@ -1,6 +1,5 @@
 package com.swisscom.uamspiketesting.service;
 
-import com.swisscom.uamspiketesting.exception.UserAlreadyExistsException;
 import com.swisscom.uamspiketesting.exception.UserNotFoundException;
 import com.swisscom.uamspiketesting.model.User;
 import com.swisscom.uamspiketesting.repository.UserRepository;
@@ -17,7 +16,7 @@ import java.util.Optional;
 public class UserService {
 
    @Autowired
-   UserRepository userRepository;
+   private UserRepository userRepository;
 
    public List<User> getUsers() {
       ArrayList<User> userList = (ArrayList<User>) userRepository.findAll();
@@ -25,10 +24,6 @@ public class UserService {
    }
 
    public void addUser(User user) {
-      boolean doesUserExist = userRepository.doesUserWithEmailExist(user.getEmail());
-      if(doesUserExist) {
-         throw new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists.");
-      }
       userRepository.save(user);
    }
 
