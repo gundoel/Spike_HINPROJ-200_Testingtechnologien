@@ -4,10 +4,7 @@ import com.swisscom.uamspiketesting.exception.UserAlreadyExistsException;
 import com.swisscom.uamspiketesting.model.Role;
 import com.swisscom.uamspiketesting.model.User;
 import com.swisscom.uamspiketesting.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -26,6 +23,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
 
    // Use mockito to mock userRepository, since UserRepository has already been tested in UserRepositoryTest
@@ -34,11 +32,22 @@ class UserServiceTest {
    // private AutoCloseable autoCloseable; -> not needed with @ExtendedWith(MockitoExtension.class)
    private UserService userService;
 
+   private User user;
+   private HashSet<Role> roles;
+   private HashSet<User> emptySet;
+   private List<User> users;
+
    @BeforeEach
    void setUp() {
       // initialize all mocks in this test class
       //autoCloseable = MockitoAnnotations.openMocks(this);  -> not needed with @ExtendedWith(MockitoExtension.class)
       userService = new UserService(userRepository);
+      emptySet = new HashSet<>();
+      roles = new HashSet<>();
+      roles.add(new Role(1, "admin", emptySet));
+      user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
+      users = new ArrayList<>();
+      users.add(user);
    }
 
    @AfterEach
@@ -58,10 +67,6 @@ class UserServiceTest {
 
    @Test
    void canAddUser() throws Exception {
-      HashSet<User> usersDummy = new HashSet<>();
-      HashSet<Role> roles = new HashSet<>();
-      roles.add(new Role(1, "admin", usersDummy));
-      User user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
       userService.addUser(user);
       // verify getUsers was invoked with user we pass
       ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -78,10 +83,6 @@ class UserServiceTest {
       // test fails since UserValidationService was implemented instead of exception
       // test remains in code as sample
    void willThrowWhenUserWithEmailExists() {
-      HashSet<User> usersDummy = new HashSet<>();
-      HashSet<Role> roles = new HashSet<>();
-      roles.add(new Role(1, "admin", usersDummy));
-      User user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
       // mock return value of repository method (which would return false, since user does not exist)
       // instead of email we could pass anyString()
       given(userRepository.doesUserWithEmailExist(user.getEmail())).willReturn(true);
@@ -94,12 +95,6 @@ class UserServiceTest {
 
    @Test
    void canGetUsersByEmail() {
-      HashSet<User> usersDummy = new HashSet<>();
-      HashSet<Role> roles = new HashSet<>();
-      roles.add(new Role(1, "admin", usersDummy));
-      User user = new User(1, "Hans", "Muster", "hans.muster@test.com", "1234", true, roles);
-      List<User> users = new ArrayList<>();
-      users.add(user);
       // assert that every user in list has given email address
       Mockito.when(userRepository.findByEmail(user.getEmail())).thenReturn(users);
       assertThat(userService.getUsersByEmail(user.getEmail())).isEqualTo(users);
